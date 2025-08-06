@@ -43,18 +43,18 @@ func main() {
 	}
 
 	// show and verify encryption proof (e,f)
-	var cproof struct {
-		E []byte
-		F []byte
-	}
-	if raw, err := ctxt.Marshal(); err == nil {
-		_ = json.Unmarshal(raw, &cproof)
-		fmt.Printf("ciphertext proof e=%s f=%s\n", hex.EncodeToString(cproof.E), hex.EncodeToString(cproof.F))
-	}
-	if err := ctxt.Verify(pk); err != nil {
-		panic(fmt.Errorf("verify ciphertext: %w", err))
-	}
-	fmt.Println("ciphertext proof verified")
+	// var cproof struct {
+	// 	E []byte
+	// 	F []byte
+	// }
+	// if raw, err := ctxt.Marshal(); err == nil {
+	// 	_ = json.Unmarshal(raw, &cproof)
+	// 	fmt.Printf("ciphertext proof e=%s f=%s\n", hex.EncodeToString(cproof.E), hex.EncodeToString(cproof.F))
+	// }
+	// if err := ctxt.Verify(pk); err != nil {
+	// 	panic(fmt.Errorf("verify ciphertext: %w", err))
+	// }
+	// fmt.Println("ciphertext proof verified")
 
 	// nodes create decryption shares with proofs for the ciphertext
 	decShares := make([]*tdh2.DecryptionShare, 0, k)
