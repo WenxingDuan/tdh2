@@ -4,8 +4,6 @@ import (
 	"crypto/aes"
 	"crypto/cipher"
 	cryptorand "crypto/rand"
-	"encoding/hex"
-	"encoding/json"
 	"fmt"
 
 	"github.com/smartcontractkit/tdh2/go/tdh2/lib/group/nist"
@@ -42,20 +40,6 @@ func main() {
 		panic(fmt.Errorf("encrypt: %w", err))
 	}
 
-	// show and verify encryption proof (e,f)
-	// var cproof struct {
-	// 	E []byte
-	// 	F []byte
-	// }
-	// if raw, err := ctxt.Marshal(); err == nil {
-	// 	_ = json.Unmarshal(raw, &cproof)
-	// 	fmt.Printf("ciphertext proof e=%s f=%s\n", hex.EncodeToString(cproof.E), hex.EncodeToString(cproof.F))
-	// }
-	// if err := ctxt.Verify(pk); err != nil {
-	// 	panic(fmt.Errorf("verify ciphertext: %w", err))
-	// }
-	// fmt.Println("ciphertext proof verified")
-
 	// nodes create decryption shares with proofs for the ciphertext
 	decShares := make([]*tdh2.DecryptionShare, 0, k)
 	for i := 0; i < k; i++ {
@@ -63,19 +47,6 @@ func main() {
 		if err != nil {
 			panic(fmt.Errorf("decrypt share %d: %w", i, err))
 		}
-		// show and verify decryption proof (e_i,f_i)
-		var sproof struct {
-			E_i []byte
-			F_i []byte
-		}
-		if raw, err := ds.Marshal(); err == nil {
-			_ = json.Unmarshal(raw, &sproof)
-			fmt.Printf("share %d proof e_i=%s f_i=%s\n", ds.Index(), hex.EncodeToString(sproof.E_i), hex.EncodeToString(sproof.F_i))
-		}
-		if err := tdh2.VerifyShare(pk, ctxt, ds); err != nil {
-			panic(fmt.Errorf("verify share %d: %w", i, err))
-		}
-		fmt.Printf("share %d proof verified\n", ds.Index())
 		decShares = append(decShares, ds)
 	}
 
